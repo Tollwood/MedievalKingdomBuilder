@@ -1,36 +1,41 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
-    public GameObject loadGamePenal;
     public TextMeshProUGUI title;
     public GameObject buttonPanel;
 
-    public GameObject saveButton;
-    public GameObject newButton;
+    public Button saveButton;
+    public Button newButton;
 
     private SaveManager saveManager;
     private NewGameManager newGameManager;
+    private OptionsManager optionsManager;
 
     private void Start()
     {
         saveManager = transform.GetComponent<SaveManager>();
         newGameManager = transform.GetComponent<NewGameManager>();
+        optionsManager = transform.GetComponent<OptionsManager>();
     }
 
     private void Update()
     {
-
-        saveButton.SetActive(SaveData.current.gameStarted);
-        newButton.SetActive(!SaveData.current.gameStarted);
-
-        if (Input.GetKeyDown(KeyCode.Escape) && SaveData.current.gameStarted)
+        saveButton.interactable = SaveData.current.gameState != GameState.NEW_GAME;
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            title.gameObject.SetActive(!title.gameObject.activeSelf);
-            title.text = "Kingdom Builder " + GetFamiliyName();
-            buttonPanel.SetActive(!buttonPanel.activeSelf);
+            if (SaveData.current.gameState == GameState.PLAYING)
+            {
+                OpenMainMenu();
+            }
+            else if( SaveData.current.gameState == GameState.PAUSED)
+            {
+                CloseMainMenu();
+            }
+            
         }
 
     }
@@ -47,8 +52,9 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenNewGameMenu()
     {
+        SaveData.Reset();
         CloseMainMenu();
-        newGameManager.OpenMenu();
+        newGameManager.OpenMenu(OpenMainMenu);
     }
 
     public void OpenLoadMenu()
@@ -65,6 +71,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenMainMenu()
     {
+        SaveData.current.prevGameState = SaveData.current.gameState;
+        SaveData.current.gameState = GameState.PAUSED;
         title.gameObject.SetActive(true);
         title.text = "Kingdom Builder " + GetFamiliyName();
         buttonPanel.SetActive(true);
@@ -72,7 +80,14 @@ public class MainMenuManager : MonoBehaviour
 
     public void CloseMainMenu()
     {
+        SaveData.current.gameState = SaveData.current.prevGameState;
         title.gameObject.SetActive(false);
         buttonPanel.SetActive(false);
+    }
+
+    public void OpenOptionsMenu()
+    {
+        CloseMainMenu();
+        optionsManager.OpenMenu(OpenMainMenu);
     }
 }

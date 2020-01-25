@@ -1,0 +1,10 @@
+NEW_GAME=New Game
+LOAD_GAME=Load Game
+OPTIONS=Options
+QUIT=Quit
+SAVE_GAME= Save Game
+en=English
+de=German
+CONTINUE=continue
+BACK=back
+LORD=Lord

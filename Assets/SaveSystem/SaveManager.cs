@@ -30,7 +30,7 @@ public class SaveManager : MonoBehaviour
     public void OpenSaveMenu(Action newOnClose )
     {
         saveMenu.SetActive(true);
-        SetTitle("Save Game");
+        SetTitle(TranslationService.current.getTranslation("SAVE_GAME"));
         UpdateSaveItems();
         RegisterSaveAction();
         onClose = newOnClose;
@@ -39,7 +39,7 @@ public class SaveManager : MonoBehaviour
     public void OpenLoadMenu(Action newOnClose)
     {
         saveMenu.SetActive(true);
-        SetTitle("Load Game");
+        SetTitle(TranslationService.current.getTranslation("LOAD_GAME"));
         UpdateSaveItems();
         RegisterLoadAction();
         onClose = newOnClose;
@@ -159,6 +159,7 @@ public class SaveManager : MonoBehaviour
                 saveItems[i].onClick.AddListener(() => {
                     string savePath = Application.persistentDataPath + SAVE_FOLDER + index + "_" + saveName + SAVE_FILE_EXTENSION;
                     SaveData.Update(SerializationManager.Load(savePath) as SaveData);
+                    OnLoadSubscriber.current.TriggerLoad();
                     CloseMenu();
                 });
             }

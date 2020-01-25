@@ -22,7 +22,11 @@ public class SaveData
     }
 
     public string familyName;
-    public bool gameStarted = false;
+    public GameState prevGameState = GameState.NEW_GAME;
+    public GameState gameState = GameState.NEW_GAME;
+    internal Vector3 cameraRigPosition = Vector3.zero;
+    internal Quaternion cameraRigRotation = Quaternion.identity;
+    internal Vector3 zoom = new Vector3(0, 20, -20);
 
     internal static void Reset()
     {
